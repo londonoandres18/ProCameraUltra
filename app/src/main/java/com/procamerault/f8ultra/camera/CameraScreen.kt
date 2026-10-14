@@ -460,6 +460,17 @@ fun CameraScreen(
                         is VideoRecordEvent.Pause -> status = "Video pausado"
                         is VideoRecordEvent.Resume -> status = "Grabando video…"
                         is VideoRecordEvent.Finalize -> {
+                            val savedVideo = event.outputResults.outputUri
+                            if (!event.hasError() && savedVideo != Uri.EMPTY) {
+                                runCatching {
+                                    val finalValues = ContentValues().apply {
+                                        put(MediaStore.MediaColumns.IS_PENDING, 0)
+                                    }
+                                    context.contentResolver.update(savedVideo, finalValues, null, null)
+                                }
+                            } else if (savedVideo != Uri.EMPTY) {
+                                runCatching { context.contentResolver.delete(savedVideo, null, null) }
+                            }
                             recording = null
                             galleryRefresh += 1
                             status = if (!event.hasError()) "Video guardado en Galería"
