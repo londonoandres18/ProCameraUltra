@@ -319,7 +319,7 @@ fun CameraScreen(
             } catch (error: Exception) {
                 status = "${modeToRun.label}: ${error.localizedMessage ?: error.javaClass.simpleName}"
             } finally {
-                runCatching { withContext(Dispatchers.IO) { currentCamera.cameraControl.setExposureCompensationIndex(oldIndex).get() } }
+                try { withContext(Dispatchers.IO) { currentCamera.cameraControl.setExposureCompensationIndex(oldIndex).get() } } catch (_: Exception) { }
                 tempFiles.forEach { runCatching { it.delete() } }
                 busy = false
             }
