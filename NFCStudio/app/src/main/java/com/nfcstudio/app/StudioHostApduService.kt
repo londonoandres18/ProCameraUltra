@@ -1,0 +1,18 @@
+package com.nfcstudio.app
+
+import android.nfc.cardemulation.HostApduService
+import android.os.Bundle
+
+/** HCE demo for NFC Studio's own test AID; not a third-party credential emulator. */
+class StudioHostApduService : HostApduService() {
+    companion object {
+        private val SELECT_AID = byteArrayOf(0x00, 0xA4.toByte(), 0x04, 0x00, 0x07,
+            0xF0.toByte(), 0x01, 0x02, 0x03, 0x04, 0x05, 0x06)
+        private val RESPONSE = "NFC STUDIO DEMO".toByteArray(Charsets.UTF_8) +
+            byteArrayOf(0x90.toByte(), 0x00)
+        private val NOT_FOUND = byteArrayOf(0x6A.toByte(), 0x82.toByte())
+    }
+    override fun processCommandApdu(commandApdu: ByteArray, extras: Bundle?): ByteArray =
+        if (commandApdu.contentEquals(SELECT_AID)) RESPONSE else NOT_FOUND
+    override fun onDeactivated(reason: Int) = Unit
+}

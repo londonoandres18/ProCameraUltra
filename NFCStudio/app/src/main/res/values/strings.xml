@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">NFC Studio</string>
+    <string name="hce_description">NFC Studio demo emulation</string>
+    <string name="hce_group_description">NFC Studio test profile only</string>
+</resources>
